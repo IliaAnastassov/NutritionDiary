@@ -108,6 +108,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NutritionDiary.WebAPI\NutritionDiary.WebAPI.csproj">
+      <Project>{ED48D97B-C891-40F6-A538-0C85DE89F021}</Project>
+      <Name>NutritionDiary.WebAPI</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
