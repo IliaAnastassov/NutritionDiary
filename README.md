@@ -1,2 +1,2 @@
 # NutritionDiary
-A simple API for keeping track of daily nutrition
+A simple REST-ful API for keeping track of daily nutrition
