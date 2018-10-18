@@ -16,6 +16,6 @@
         public double Cholestrol { get; set; }
 
         public int FoodId { get; set; }
-        public virtual Food Food { get; set; }
+        public Food Food { get; set; }
     }
 }
