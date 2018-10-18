@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutritionDiary.WebAPI", "Nu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutritionDiary.WebAPI.Tests", "NutritionDiary.WebAPI.Tests\NutritionDiary.WebAPI.Tests.csproj", "{98BF9CF2-9559-4BE1-AD5F-5EC6245963DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutritionDiary.Data", "NutritionDiary.Data\NutritionDiary.Data.csproj", "{59DA6D1B-564A-46D7-82BA-AE3568FA103F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutritionDiary.Entities", "NutritionDiary.Entities\NutritionDiary.Entities.csproj", "{6D6A84DD-0E52-4702-973C-F4F48F544B93}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +27,14 @@ Global
 		{98BF9CF2-9559-4BE1-AD5F-5EC6245963DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98BF9CF2-9559-4BE1-AD5F-5EC6245963DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98BF9CF2-9559-4BE1-AD5F-5EC6245963DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59DA6D1B-564A-46D7-82BA-AE3568FA103F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59DA6D1B-564A-46D7-82BA-AE3568FA103F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59DA6D1B-564A-46D7-82BA-AE3568FA103F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59DA6D1B-564A-46D7-82BA-AE3568FA103F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D6A84DD-0E52-4702-973C-F4F48F544B93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D6A84DD-0E52-4702-973C-F4F48F544B93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D6A84DD-0E52-4702-973C-F4F48F544B93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D6A84DD-0E52-4702-973C-F4F48F544B93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
