@@ -10,6 +10,10 @@ namespace NutritionDiary.Data
 {
     internal class NutritionDiaryDb : DbContext
     {
+        public NutritionDiaryDb() : base("DefaultConnection")
+        {
+        }
+
         public DbSet<Food> Foods { get; set; }
         public DbSet<Measure> Measures { get; set; }
     }
