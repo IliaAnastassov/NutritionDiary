@@ -276,6 +276,16 @@
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NutritionDiary.Data\NutritionDiary.Data.csproj">
+      <Project>{59da6d1b-564a-46d7-82ba-ae3568fa103f}</Project>
+      <Name>NutritionDiary.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NutritionDiary.Entities\NutritionDiary.Entities.csproj">
+      <Project>{6d6a84dd-0e52-4702-973c-f4f48f544b93}</Project>
+      <Name>NutritionDiary.Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
