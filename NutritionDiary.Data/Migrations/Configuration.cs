@@ -2,6 +2,7 @@ using System;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using NutritionDiary.Entities;
 
 namespace NutritionDiary.Data.Migrations
 {
@@ -14,10 +15,18 @@ namespace NutritionDiary.Data.Migrations
 
         protected override void Seed(NutritionDiaryDb context)
         {
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data.
+            context.Foods.AddOrUpdate(f => f.Description,
+                new Food { Description = "Milk" },
+                new Food { Description = "Butter" },
+                new Food { Description = "Bread" },
+                new Food { Description = "Steak" },
+                new Food { Description = "Pizza" },
+                new Food { Description = "Burger" },
+                new Food { Description = "Rice" },
+                new Food { Description = "Patatoe" },
+                new Food { Description = "Apple" },
+                new Food { Description = "Bannana" }
+            );
         }
     }
 }

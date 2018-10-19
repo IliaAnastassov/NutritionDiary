@@ -51,6 +51,7 @@
     <Compile Include="Interfaces\INutritionDiaryRepository.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="NutritionDiaryDb.cs" />
+    <Compile Include="NutritionDiaryRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
