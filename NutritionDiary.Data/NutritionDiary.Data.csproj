@@ -49,6 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\INutritionDiaryRepository.cs" />
+    <Compile Include="Migrations\201810201729191_InitialCreate.cs" />
+    <Compile Include="Migrations\201810201729191_InitialCreate.Designer.cs">
+      <DependentUpon>201810201729191_InitialCreate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="NutritionDiaryDb.cs" />
     <Compile Include="NutritionDiaryRepository.cs" />
@@ -63,6 +67,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201810201729191_InitialCreate.resx">
+      <DependentUpon>201810201729191_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
