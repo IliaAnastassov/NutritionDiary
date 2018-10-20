@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using NutritionDiary.Data;
 using NutritionDiary.Data.Interfaces;
@@ -14,11 +12,6 @@ namespace NutritionDiary.WebAPI.Controllers
     {
         private INutritionDiaryRepository _repository;
 
-        public FoodsController()
-        {
-            _repository = new NutritionDiaryRepository();
-        }
-
         public FoodsController(INutritionDiaryRepository repository)
         {
             _repository = repository;
@@ -26,10 +19,12 @@ namespace NutritionDiary.WebAPI.Controllers
 
         public IEnumerable<Food> Get()
         {
-            return _repository.GetAllFoods()
-                              .OrderBy(f => f.Description)
-                              .Take(25)
-                              .ToList();
+            var foods = _repository.GetAllFoods()
+                                   .OrderBy(f => f.Description)
+                                   .Take(25)
+                                   .ToList();
+
+            return foods;
         }
     }
 }
