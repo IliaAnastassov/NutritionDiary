@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NutritionDiary.Data.Interfaces;
 using NutritionDiary.Entities;
 
@@ -14,7 +12,9 @@ namespace NutritionDiary.Data
         {
             using (var db = new NutritionDiaryDb())
             {
-                return db.Foods.ToList();
+                return db.Foods
+                         .Include(f => f.Measures)
+                         .ToList();
             }
         }
     }
