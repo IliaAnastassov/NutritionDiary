@@ -31,7 +31,6 @@ namespace NutritionDiary.Data
         public IQueryable<Food> GetAllFoodsWithMeasures()
         {
             return _db.Foods.Include(f => f.Measures);
-
         }
     }
 }
