@@ -13,7 +13,6 @@ namespace NutritionDiary.Entities
         public Measure Measure { get; set; }
         public double Quantity { get; set; }
 
-        public int DiaryId { get; set; }
         public Diary Diary { get; set; }
     }
 }
