@@ -7,6 +7,6 @@ namespace NutritionDiary.Entities
         public int Id { get; set; }
         public string Description { get; set; }
 
-        public virtual ICollection<Measure> Measures { get; set; }
+        public virtual ICollection<Measure> Measures { get; set; } = new List<Measure>();
     }
 }
