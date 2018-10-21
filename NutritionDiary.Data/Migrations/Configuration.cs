@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
@@ -24,8 +25,38 @@ namespace NutritionDiary.Data.Migrations
                 new Food { Description = "Burger" },
                 new Food { Description = "Rice" },
                 new Food { Description = "Patatoe" },
-                new Food { Description = "Apple" },
-                new Food { Description = "Bannana" }
+                new Food
+                {
+                    Description = "Apple",
+                    Measures = new List<Measure>
+                    {
+                        new Measure
+                        {
+                            Calories = 150,
+                            Protein = 5,
+                            Carbohydrates = 60,
+                            Sugar = 30,
+                            TotalFat = 5,
+                            Fiber = 12
+                        }
+                    }
+                },
+                new Food
+                {
+                    Description = "Bannana",
+                    Measures = new List<Measure>
+                    {
+                        new Measure
+                        {
+                            Calories = 200,
+                            Protein = 10,
+                            Carbohydrates = 65,
+                            Sugar = 20,
+                            TotalFat = 12,
+                            Fiber = 15
+                        }
+                    }
+                }
             );
         }
     }
