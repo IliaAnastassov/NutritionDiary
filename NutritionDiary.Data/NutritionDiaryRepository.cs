@@ -17,5 +17,16 @@ namespace NutritionDiary.Data
                          .ToList();
             }
         }
+
+        public Food GetFood(int id)
+        {
+            using (var db = new NutritionDiaryDb())
+            {
+                return db.Foods
+                         .Include(f => f.Measures)
+                         .Where(f => f.Id == id)
+                         .FirstOrDefault();
+            }
+        }
     }
 }
