@@ -3,10 +3,12 @@ using NutritionDiary.Entities;
 
 namespace NutritionDiary.Data
 {
-    internal class NutritionDiaryDb : DbContext
+    public class NutritionDiaryDb : DbContext
     {
         public NutritionDiaryDb() : base("DefaultConnection")
         {
+            Configuration.LazyLoadingEnabled = false;
+            Configuration.ProxyCreationEnabled = false;
         }
 
         public DbSet<ApiUser> ApiUsers { get; set; }

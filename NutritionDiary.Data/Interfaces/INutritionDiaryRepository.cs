@@ -9,7 +9,8 @@ namespace NutritionDiary.Data.Interfaces
 {
     public interface INutritionDiaryRepository
     {
-        IEnumerable<Food> GetAllFoods();
         Food GetFood(int id);
+        IQueryable<Food> GetAllFoods();
+        IQueryable<Food> GetAllFoodsWithMeasures();
     }
 }

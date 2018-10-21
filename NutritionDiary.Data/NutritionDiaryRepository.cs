@@ -8,25 +8,30 @@ namespace NutritionDiary.Data
 {
     public class NutritionDiaryRepository : INutritionDiaryRepository
     {
-        public IEnumerable<Food> GetAllFoods()
+        private NutritionDiaryDb _db;
+
+        public NutritionDiaryRepository(NutritionDiaryDb db)
         {
-            using (var db = new NutritionDiaryDb())
-            {
-                return db.Foods
-                         .Include(f => f.Measures)
-                         .ToList();
-            }
+            _db = db;
         }
 
         public Food GetFood(int id)
         {
-            using (var db = new NutritionDiaryDb())
-            {
-                return db.Foods
-                         .Include(f => f.Measures)
-                         .Where(f => f.Id == id)
-                         .FirstOrDefault();
-            }
+            return _db.Foods
+                      .Include(f => f.Measures)
+                      .Where(f => f.Id == id)
+                      .FirstOrDefault();
+        }
+
+        public IQueryable<Food> GetAllFoods()
+        {
+            return _db.Foods;
+        }
+
+        public IQueryable<Food> GetAllFoodsWithMeasures()
+        {
+            return _db.Foods.Include(f => f.Measures);
+
         }
     }
 }
