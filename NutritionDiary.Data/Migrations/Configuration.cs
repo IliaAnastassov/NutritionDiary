@@ -32,6 +32,7 @@ namespace NutritionDiary.Data.Migrations
                     {
                         new Measure
                         {
+                            Description = "1 fruit, medium sized",
                             Calories = 150,
                             Protein = 5,
                             Carbohydrates = 60,
@@ -48,6 +49,7 @@ namespace NutritionDiary.Data.Migrations
                     {
                         new Measure
                         {
+                            Description = "1 fruit, large sized",
                             Calories = 200,
                             Protein = 10,
                             Carbohydrates = 65,

@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Description { get; set; }
-        public double Calories { get; set; }
+        public int Calories { get; set; }
         public double TotalFat { get; set; }
         public double SaturatedFat { get; set; }
         public double Protein { get; set; }
