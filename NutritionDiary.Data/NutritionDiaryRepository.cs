@@ -17,10 +17,10 @@ namespace NutritionDiary.Data
 
         public Food GetFood(int id)
         {
-            var food =  _db.Foods
-                           .Include(f => f.Measures)
-                           .Where(f => f.Id == id)
-                           .FirstOrDefault();
+            var food = _db.Foods
+                          .Include(f => f.Measures)
+                          .Where(f => f.Id == id)
+                          .FirstOrDefault();
 
             if (food == null)
             {
@@ -38,6 +38,28 @@ namespace NutritionDiary.Data
         public IQueryable<Food> GetAllFoodsWithMeasures()
         {
             return _db.Foods.Include(f => f.Measures);
+        }
+
+        public IQueryable<Measure> GetMeasuresForFood(int foodId)
+        {
+            return _db.Measures
+                      .Include(m => m.Food)
+                      .Where(m => m.Food.Id == foodId);
+        }
+
+        public Measure GetMeasure(int measureId)
+        {
+            var measure = _db.Measures
+                             .Include(m => m.Food)
+                             .Where(m => m.Id == measureId)
+                             .FirstOrDefault();
+
+            if (measure == null)
+            {
+                measure = new Measure();
+            }
+
+            return measure;
         }
     }
 }

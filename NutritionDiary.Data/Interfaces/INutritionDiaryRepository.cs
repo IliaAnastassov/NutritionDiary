@@ -12,5 +12,7 @@ namespace NutritionDiary.Data.Interfaces
         Food GetFood(int id);
         IQueryable<Food> GetAllFoods();
         IQueryable<Food> GetAllFoodsWithMeasures();
+        IQueryable<Measure> GetMeasuresForFood(int foodId);
+        Measure GetMeasure(int measureId);
     }
 }
