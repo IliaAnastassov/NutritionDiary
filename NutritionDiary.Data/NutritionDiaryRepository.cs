@@ -17,10 +17,17 @@ namespace NutritionDiary.Data
 
         public Food GetFood(int id)
         {
-            return _db.Foods
-                      .Include(f => f.Measures)
-                      .Where(f => f.Id == id)
-                      .FirstOrDefault();
+            var food =  _db.Foods
+                           .Include(f => f.Measures)
+                           .Where(f => f.Id == id)
+                           .FirstOrDefault();
+
+            if (food == null)
+            {
+                food = new Food();
+            }
+
+            return food;
         }
 
         public IQueryable<Food> GetAllFoods()
