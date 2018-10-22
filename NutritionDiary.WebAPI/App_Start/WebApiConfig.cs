@@ -20,10 +20,15 @@ namespace NutritionDiary.WebAPI
 
             config.Routes.MapHttpRoute(
                 name: "Food",
-                routeTemplate: "api/nutrition/foods/{id}",
-                defaults: new { controller = "Foods", id = RouteParameter.Optional }
+                routeTemplate: "api/nutrition/foods/{foodid}",
+                defaults: new { controller = "foods", foodid = RouteParameter.Optional }
             );
 
+            config.Routes.MapHttpRoute(
+                name: "Measures",
+                routeTemplate: "api/nutrition/foods/{foodid}/measures/{measureid}",
+                defaults: new { controller = "measures", measureid = RouteParameter.Optional }
+            );
         }
     }
 }
