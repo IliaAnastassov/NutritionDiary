@@ -40,9 +40,9 @@ namespace NutritionDiary.WebAPI.Controllers
             return foods;
         }
 
-        public FoodModel Get(int id)
+        public FoodModel Get(int foodId)
         {
-            var food = _repository.GetFood(id);
+            var food = _repository.GetFood(foodId);
             return _modelFactory.Create(food);
         }
     }
