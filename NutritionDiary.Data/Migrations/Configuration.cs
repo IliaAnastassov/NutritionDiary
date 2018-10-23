@@ -61,6 +61,14 @@ namespace NutritionDiary.Data.Migrations
                     }
                 }
             );
+
+            context.Diaries.AddOrUpdate(d => d.CurrentDate,
+                new Diary
+                {
+                    UserName = "ianastassov",
+                    CurrentDate = DateTime.Today
+                }
+            );
         }
     }
 }
