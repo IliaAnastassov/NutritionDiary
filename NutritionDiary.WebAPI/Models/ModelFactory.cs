@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http;
-using System.Web;
 using System.Web.Http.Routing;
 using NutritionDiary.Entities;
 
@@ -40,6 +37,17 @@ namespace NutritionDiary.WebAPI.Models
                 Protein = measure.Protein,
                 Carbohydrates = measure.Carbohydrates,
                 Sugar = measure.Sugar
+            };
+
+            return model;
+        }
+
+        internal DiaryModel Create(Diary diary)
+        {
+            var model = new DiaryModel
+            {
+                Url = _urlHelper.Link("Diaries", new { diaryid = diary.CurrentDate.ToString("yyyy-MM-dd") }),
+                CurrentDate = diary.CurrentDate
             };
 
             return model;
