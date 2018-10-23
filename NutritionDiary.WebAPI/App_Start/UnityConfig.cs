@@ -1,7 +1,8 @@
 using System;
-using Unity;
 using NutritionDiary.Data;
 using NutritionDiary.Data.Interfaces;
+using NutritionDiary.WebAPI.Services;
+using Unity;
 
 namespace NutritionDiary.WebAPI
 {
@@ -43,6 +44,7 @@ namespace NutritionDiary.WebAPI
 
             // TODO: Register your type's mappings here.
             container.RegisterType<INutritionDiaryRepository, NutritionDiaryRepository>();
+            container.RegisterType<INutritionDiaryIdentityService, NutritionDiaryIdentityService>();
         }
     }
 }
