@@ -27,7 +27,7 @@ namespace NutritionDiary.WebAPI.Controllers
             var measure = Repository.GetMeasure(measureId);
             MeasureModel model;
 
-            if (foodId == measure.Food?.Id)
+            if (foodId == measure.Food.Id)
             {
                 model = ModelFactory.Create(measure);
             }

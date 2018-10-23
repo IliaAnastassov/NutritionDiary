@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using NutritionDiary.Data.Interfaces;
 using NutritionDiary.Entities;
@@ -56,7 +55,10 @@ namespace NutritionDiary.Data
 
             if (measure == null)
             {
-                measure = new Measure();
+                measure = new Measure
+                {
+                    Food = new Food()
+                };
             }
 
             return measure;
