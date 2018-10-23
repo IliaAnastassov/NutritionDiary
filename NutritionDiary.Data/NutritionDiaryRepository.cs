@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using NutritionDiary.Data.Interfaces;
 using NutritionDiary.Entities;
@@ -20,11 +21,6 @@ namespace NutritionDiary.Data
                           .Include(f => f.Measures)
                           .Where(f => f.Id == id)
                           .FirstOrDefault();
-
-            if (food == null)
-            {
-                food = new Food();
-            }
 
             return food;
         }
@@ -53,15 +49,23 @@ namespace NutritionDiary.Data
                              .Where(m => m.Id == measureId)
                              .FirstOrDefault();
 
-            if (measure == null)
-            {
-                measure = new Measure
-                {
-                    Food = new Food()
-                };
-            }
-
             return measure;
+        }
+
+        public IQueryable<Diary> GetDiaries(string username)
+        {
+            return _db.Diaries
+                      .Where(d => d.UserName == username);
+        }
+
+        public Diary GetDiary(DateTime diaryId)
+        {
+            var diary = _db.Diaries
+                           .Include(d => d.Entries)
+                           .Where(d => d.CurrentDate == diaryId)
+                           .FirstOrDefault();
+
+            return diary;
         }
     }
 }

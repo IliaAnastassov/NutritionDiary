@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NutritionDiary.Entities;
 
 namespace NutritionDiary.Data.Interfaces
@@ -14,5 +11,7 @@ namespace NutritionDiary.Data.Interfaces
         IQueryable<Food> GetAllFoodsWithMeasures();
         IQueryable<Measure> GetMeasuresForFood(int foodId);
         Measure GetMeasure(int measureId);
+        IQueryable<Diary> GetDiaries(string username);
+        Diary GetDiary(DateTime diaryId);
     }
 }
