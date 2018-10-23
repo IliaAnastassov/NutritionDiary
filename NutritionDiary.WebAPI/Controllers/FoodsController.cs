@@ -16,11 +16,12 @@ namespace NutritionDiary.WebAPI.Controllers
         public FoodsController(INutritionDiaryRepository repository)
         {
             _repository = repository;
-            _modelFactory = new ModelFactory();
         }
 
         public IEnumerable<FoodModel> Get(bool includeMeasures = true)
         {
+            _modelFactory = new ModelFactory(Request);
+
             IQueryable<Food> query;
 
             if (includeMeasures)
@@ -42,6 +43,8 @@ namespace NutritionDiary.WebAPI.Controllers
 
         public FoodModel Get(int foodId)
         {
+            _modelFactory = new ModelFactory(Request);
+
             var food = _repository.GetFood(foodId);
             return _modelFactory.Create(food);
         }

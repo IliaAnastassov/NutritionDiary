@@ -17,11 +17,12 @@ namespace NutritionDiary.WebAPI.Controllers
         public MeasuresController(INutritionDiaryRepository repository)
         {
             _repository = repository;
-            _modelFactory = new ModelFactory();
         }
 
         public IEnumerable<MeasureModel> Get(int foodId)
         {
+            _modelFactory = new ModelFactory(Request);
+
             var measures = _repository.GetMeasuresForFood(foodId)
                                       .OrderBy(m => m.Description)
                                       .ToList()
@@ -32,6 +33,7 @@ namespace NutritionDiary.WebAPI.Controllers
 
         public MeasureModel Get(int foodId, int measureId)
         {
+            _modelFactory = new ModelFactory(Request);
             var measure = _repository.GetMeasure(measureId);
             MeasureModel model;
 

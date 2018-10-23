@@ -19,7 +19,7 @@ namespace NutritionDiary.WebAPI
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
-                name: "Food",
+                name: "Foods",
                 routeTemplate: "api/nutrition/foods/{foodid}",
                 defaults: new { controller = "foods", foodid = RouteParameter.Optional }
             );
