@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
+using System.Web.Http;
 using NutritionDiary.Data.Interfaces;
 using NutritionDiary.Entities;
 using NutritionDiary.WebAPI.Models;
@@ -14,7 +14,7 @@ namespace NutritionDiary.WebAPI.Controllers
         {
         }
 
-        public IEnumerable<FoodModel> Get(bool includeMeasures = true)
+        public IHttpActionResult Get(bool includeMeasures = true)
         {
             IQueryable<Food> query;
 
@@ -29,16 +29,28 @@ namespace NutritionDiary.WebAPI.Controllers
 
             var foods = query.OrderBy(f => f.Description)
                              .Take(25)
-                             .ToList()
-                             .Select(f => ModelFactory.Create(f));
+                             .ToList();
 
-            return foods;
+            if (foods == null)
+            {
+                return NotFound();
+            }
+
+            var models = foods.Select(f => ModelFactory.Create(f));
+            return Ok(models);
         }
 
-        public FoodModel Get(int foodId)
+        public IHttpActionResult Get(int foodId)
         {
             var food = Repository.GetFood(foodId);
-            return ModelFactory.Create(food);
+
+            if (food == null)
+            {
+                return NotFound();
+            }
+
+            var model = ModelFactory.Create(food);
+            return Ok(model);
         }
     }
 }

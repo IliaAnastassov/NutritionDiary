@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Web.Http;
 using NutritionDiary.Data.Interfaces;
 using NutritionDiary.WebAPI.Models;
 
@@ -12,31 +12,41 @@ namespace NutritionDiary.WebAPI.Controllers
         {
         }
 
-        public IEnumerable<MeasureModel> Get(int foodId)
+        public IHttpActionResult Get(int foodId)
         {
             var measures = Repository.GetMeasuresForFood(foodId)
                                      .OrderBy(m => m.Description)
-                                     .ToList()
-                                     .Select(m => ModelFactory.Create(m));
+                                     .ToList();
 
-            return measures;
+            if (measures == null)
+            {
+                return NotFound();
+            }
+
+            var models = measures.Select(m => ModelFactory.Create(m));
+            return Ok(models);
         }
 
-        public MeasureModel Get(int foodId, int measureId)
+        public IHttpActionResult Get(int foodId, int measureId)
         {
             var measure = Repository.GetMeasure(measureId);
-            MeasureModel model;
 
+            if (measure == null)
+            {
+                return NotFound();
+            }
+
+            MeasureModel model;
             if (foodId == measure.Food.Id)
             {
                 model = ModelFactory.Create(measure);
             }
             else
             {
-                model = null;
+                return NotFound();
             }
 
-            return model;
+            return Ok(model);
         }
     }
 }
