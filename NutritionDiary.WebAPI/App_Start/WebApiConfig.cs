@@ -29,6 +29,12 @@ namespace NutritionDiary.WebAPI
                 routeTemplate: "api/nutrition/foods/{foodid}/measures/{measureid}",
                 defaults: new { controller = "measures", measureid = RouteParameter.Optional }
             );
+
+            config.Routes.MapHttpRoute(
+                name: "Diaries",
+                routeTemplate: "api/user/diaries/{diaryid}",
+                defaults: new { controller = "diaries", diaryid = RouteParameter.Optional }
+            );
         }
     }
 }
