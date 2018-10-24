@@ -12,6 +12,8 @@ namespace NutritionDiary.Data.Interfaces
         IQueryable<Measure> GetMeasuresForFood(int foodId);
         Measure GetMeasure(int measureId);
         IQueryable<Diary> GetDiaries(string username);
-        Diary GetDiary(DateTime diaryId);
+        Diary GetDiary(string username, DateTime diaryId);
+        IQueryable<DiaryEntry> GetDiaryEntries(DateTime diaryId);
+        DiaryEntry GetDiaryEntry(DateTime diaryId, int entryId);
     }
 }

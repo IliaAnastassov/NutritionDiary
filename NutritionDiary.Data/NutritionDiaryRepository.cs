@@ -58,14 +58,37 @@ namespace NutritionDiary.Data
                       .Where(d => d.UserName == username);
         }
 
-        public Diary GetDiary(DateTime diaryId)
+        public Diary GetDiary(string username, DateTime diaryId)
         {
             var diary = _db.Diaries
                            .Include(d => d.Entries)
-                           .Where(d => d.CurrentDate == diaryId)
+                           .Where(d => d.UserName == username && d.CurrentDate == diaryId)
                            .FirstOrDefault();
 
             return diary;
+        }
+
+        public IQueryable<DiaryEntry> GetDiaryEntries(DateTime diaryId)
+        {
+            var diaryEntries = _db.DiaryEntries
+                                  .Include(e => e.Diary)
+                                  .Include(e => e.FoodItem)
+                                  .Include(e => e.Measure)
+                                  .Where(e => e.Diary.CurrentDate == diaryId);
+
+            return diaryEntries;
+        }
+
+        public DiaryEntry GetDiaryEntry(DateTime diaryId, int entryId)
+        {
+            var diaryEntry = _db.DiaryEntries
+                                .Include(e => e.Diary)
+                                .Include(e => e.FoodItem)
+                                .Include(e => e.Measure)
+                                .Where(e => e.Diary.CurrentDate == diaryId && e.Id == entryId)
+                                .SingleOrDefault();
+
+            return diaryEntry;
         }
     }
 }
