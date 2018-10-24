@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Routing;
 using NutritionDiary.Entities;
@@ -42,12 +43,25 @@ namespace NutritionDiary.WebAPI.Models
             return model;
         }
 
-        internal DiaryModel Create(Diary diary)
+        public DiaryModel Create(Diary diary)
         {
             var model = new DiaryModel
             {
                 Url = _urlHelper.Link("Diaries", new { diaryid = diary.CurrentDate.ToString("yyyy-MM-dd") }),
                 CurrentDate = diary.CurrentDate
+            };
+
+            return model;
+        }
+
+        public DiaryEntryModel Create(DiaryEntry diaryEntry)
+        {
+            var model = new DiaryEntryModel
+            {
+                Url = _urlHelper.Link("DiaryEntries", new { diaryid = diaryEntry.Diary.CurrentDate.ToString("yyyy-MM-dd"), entryid = diaryEntry.Id }),
+                FoodItem = Create(diaryEntry.FoodItem),
+                Measure = Create(diaryEntry.Measure),
+                Quantity = diaryEntry.Quantity
             };
 
             return model;
