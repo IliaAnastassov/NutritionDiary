@@ -38,7 +38,7 @@ namespace NutritionDiary.WebAPI.Controllers
         public IHttpActionResult Get(DateTime diaryId)
         {
             var username = _identityService.CurrentUser;
-            var diary = Repository.GetDiary(diaryId);
+            var diary = Repository.GetDiary(username, diaryId);
 
             if (diary == null)
             {
