@@ -13,7 +13,7 @@ namespace NutritionDiary.Data.Interfaces
         Measure GetMeasure(int measureId);
         IQueryable<Diary> GetDiaries(string username);
         Diary GetDiary(string username, DateTime diaryId);
-        IQueryable<DiaryEntry> GetDiaryEntries(DateTime diaryId);
+        IQueryable<DiaryEntry> GetDiaryEntries(string username, DateTime diaryId);
         DiaryEntry GetDiaryEntry(DateTime diaryId, int entryId);
         bool Commit();
     }
