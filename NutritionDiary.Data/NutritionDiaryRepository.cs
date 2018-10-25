@@ -90,5 +90,19 @@ namespace NutritionDiary.Data
 
             return diaryEntry;
         }
+
+        public bool Commit()
+        {
+            try
+            {
+                _db.SaveChanges();
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
