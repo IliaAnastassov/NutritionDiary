@@ -28,7 +28,7 @@ namespace NutritionDiary.WebAPI.Controllers
             {
                 if (_modelFactory == null)
                 {
-                    _modelFactory = new ModelFactory(Request);
+                    _modelFactory = new ModelFactory(Request, Repository);
                 }
 
                 return _modelFactory;

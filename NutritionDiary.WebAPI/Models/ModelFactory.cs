@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Routing;
+using NutritionDiary.Data.Interfaces;
 using NutritionDiary.Entities;
 
 namespace NutritionDiary.WebAPI.Models
@@ -9,10 +10,12 @@ namespace NutritionDiary.WebAPI.Models
     public class ModelFactory
     {
         private UrlHelper _urlHelper;
+        private INutritionDiaryRepository _repository;
 
-        public ModelFactory(HttpRequestMessage request)
+        public ModelFactory(HttpRequestMessage request, INutritionDiaryRepository repository)
         {
             _urlHelper = new UrlHelper(request);
+            _repository = repository;
         }
 
         public FoodModel Create(Food food)
@@ -66,6 +69,31 @@ namespace NutritionDiary.WebAPI.Models
             };
 
             return model;
+        }
+
+        public DiaryEntry Parse(DiaryEntryModel model)
+        {
+            try
+            {
+                var entity = new DiaryEntry();
+
+                if (model.Quantity != default(double))
+                {
+                    entity.Quantity = model.Quantity;
+                }
+
+                var uri = new Uri(model.MeasureUrl);
+                var measureId = int.Parse(uri.Segments.Last());
+                var measure = _repository.GetMeasure(measureId);
+                entity.Measure = measure;
+                entity.FoodItem = measure.Food;
+
+                return entity;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }
