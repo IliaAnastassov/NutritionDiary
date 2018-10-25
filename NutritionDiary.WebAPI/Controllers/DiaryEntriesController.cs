@@ -23,9 +23,8 @@ namespace NutritionDiary.WebAPI.Controllers
 
         public IHttpActionResult Get(DateTime diaryId)
         {
-            var diaryEntries = Repository.GetDiaryEntries(diaryId)
+            var diaryEntries = Repository.GetDiaryEntries(_identityService.CurrentUser, diaryId)
                                          .ToList();
-
             if (!diaryEntries.Any())
             {
                 return NotFound();
@@ -38,7 +37,6 @@ namespace NutritionDiary.WebAPI.Controllers
         public IHttpActionResult Get(DateTime diaryId, int entryId)
         {
             var diaryEntry = Repository.GetDiaryEntry(diaryId, entryId);
-
             if (diaryEntry == null)
             {
                 return NotFound();
@@ -50,18 +48,15 @@ namespace NutritionDiary.WebAPI.Controllers
 
         public IHttpActionResult Post(DateTime diaryId, [FromBody]DiaryEntryModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
                 var entity = ModelFactory.Parse(model);
-
                 if (entity == null)
                 {
                     return BadRequest("Could not parse diary entry.");
                 }
 
-                var username = _identityService.CurrentUser;
-                var diary = Repository.GetDiary(username, diaryId);
-
+                var diary = Repository.GetDiary(_identityService.CurrentUser, diaryId);
                 if (diary == null)
                 {
                     return BadRequest("Could not read diary in body.");
@@ -81,10 +76,35 @@ namespace NutritionDiary.WebAPI.Controllers
 
                 var updatedModel = ModelFactory.Create(entity);
                 return Created(updatedModel.Url, updatedModel);
+
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
+            }
+        }
+
+        public IHttpActionResult Delete(DateTime diaryId, int entryId)
+        {
+            try
+            {
+                var diary = Repository.GetDiary(_identityService.CurrentUser, diaryId);
+                var diaryEntries = Repository.GetDiaryEntries(_identityService.CurrentUser, diaryId);
+                if (diary == null || !diaryEntries.Any(e => e.Id == entryId))
+                {
+                    return NotFound();
+                }
+
+                if (!Repository.DeleteDiaryEntry(entryId) || !Repository.Commit())
+                {
+                    return BadRequest("Could not delete diary entry.");
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

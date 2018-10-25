@@ -22,8 +22,7 @@ namespace NutritionDiary.WebAPI.Controllers
 
         public IHttpActionResult Get()
         {
-            var username = _identityService.CurrentUser;
-            var diaries = Repository.GetDiaries(username)
+            var diaries = Repository.GetDiaries(_identityService.CurrentUser)
                                     .ToList();
 
             if (!diaries.Any())
@@ -37,8 +36,7 @@ namespace NutritionDiary.WebAPI.Controllers
 
         public IHttpActionResult Get(DateTime diaryId)
         {
-            var username = _identityService.CurrentUser;
-            var diary = Repository.GetDiary(username, diaryId);
+            var diary = Repository.GetDiary(_identityService.CurrentUser, diaryId);
 
             if (diary == null)
             {
