@@ -59,8 +59,9 @@ namespace NutritionDiary.WebAPI.Models
             var model = new DiaryEntryModel
             {
                 Url = _urlHelper.Link("DiaryEntries", new { diaryid = diaryEntry.Diary.CurrentDate.ToString("yyyy-MM-dd"), entryid = diaryEntry.Id }),
-                FoodItem = Create(diaryEntry.FoodItem),
-                Measure = Create(diaryEntry.Measure),
+                FoodDescription = diaryEntry.FoodItem.Description,
+                MeasureDescription = diaryEntry.Measure.Description,
+                MeasureUrl = _urlHelper.Link("Measures", new { foodid = diaryEntry.FoodItem.Id, measureid = diaryEntry.Measure.Id }),
                 Quantity = diaryEntry.Quantity
             };
 
