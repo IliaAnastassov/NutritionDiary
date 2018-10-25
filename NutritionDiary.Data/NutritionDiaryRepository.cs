@@ -91,6 +91,20 @@ namespace NutritionDiary.Data
             return diaryEntry;
         }
 
+        public bool DeleteDiaryEntry(int id)
+        {
+            try
+            {
+                var diaryEntry = _db.DiaryEntries.Find(id);
+                _db.DiaryEntries.Remove(diaryEntry);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool Commit()
         {
             try
