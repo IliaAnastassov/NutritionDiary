@@ -47,5 +47,40 @@ namespace NutritionDiary.WebAPI.Controllers
             var model = ModelFactory.Create(diaryEntry);
             return Ok(model);
         }
+
+        public IHttpActionResult Post(DateTime diaryId, [FromBody]DiaryEntryModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                DiaryEntry diaryEntry = ModelFactory.Parse(model);
+
+                if (diaryEntry == null)
+                {
+                    return BadRequest();
+                }
+
+                var username = _identityService.CurrentUser;
+                var diary = Repository.GetDiary(username, diaryId);
+
+                if (diary == null)
+                {
+                    return NotFound();
+                }
+
+                diary.Entries.Add(diaryEntry);
+
+                if (!Repository.Commit())
+                {
+                    return BadRequest();
+                }
+
+                var updatedModel = ModelFactory.Create(diaryEntry);
+                return Created(updatedModel.Url, updatedModel);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }
