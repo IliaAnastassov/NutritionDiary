@@ -26,7 +26,7 @@ namespace NutritionDiary.WebAPI.Controllers
             var diaries = Repository.GetDiaries(username)
                                     .ToList();
 
-            if (diaries == null)
+            if (!diaries.Any())
             {
                 return NotFound();
             }

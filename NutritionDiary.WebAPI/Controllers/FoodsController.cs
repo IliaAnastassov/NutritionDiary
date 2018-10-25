@@ -31,7 +31,7 @@ namespace NutritionDiary.WebAPI.Controllers
                              .Take(25)
                              .ToList();
 
-            if (foods == null)
+            if (!foods.Any())
             {
                 return NotFound();
             }

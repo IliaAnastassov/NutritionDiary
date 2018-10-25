@@ -86,7 +86,7 @@ namespace NutritionDiary.Data
                                 .Include(e => e.FoodItem)
                                 .Include(e => e.Measure)
                                 .Where(e => e.Diary.CurrentDate == diaryId && e.Id == entryId)
-                                .SingleOrDefault();
+                                .FirstOrDefault();
 
             return diaryEntry;
         }
