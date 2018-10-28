@@ -51,7 +51,8 @@ namespace NutritionDiary.WebAPI.Models
             var model = new DiaryModel
             {
                 Url = _urlHelper.Link("Diaries", new { diaryid = diary.CurrentDate.ToString("yyyy-MM-dd") }),
-                CurrentDate = diary.CurrentDate
+                CurrentDate = diary.CurrentDate,
+                DiaryEntries = diary.Entries.Select(e => Create(e))
             };
 
             return model;
