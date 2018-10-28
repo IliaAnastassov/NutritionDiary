@@ -14,7 +14,7 @@ namespace NutritionDiary.Data.Interfaces
         IQueryable<Diary> GetDiaries(string username);
         Diary GetDiary(string username, DateTime diaryId);
         IQueryable<DiaryEntry> GetDiaryEntries(string username, DateTime diaryId);
-        DiaryEntry GetDiaryEntry(DateTime diaryId, int entryId);
+        DiaryEntry GetDiaryEntry(string username, DateTime diaryId, int entryId);
         bool DeleteDiaryEntry(int id);
         bool Commit();
     }

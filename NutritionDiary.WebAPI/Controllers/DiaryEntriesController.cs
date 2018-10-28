@@ -36,7 +36,7 @@ namespace NutritionDiary.WebAPI.Controllers
 
         public IHttpActionResult Get(DateTime diaryId, int entryId)
         {
-            var diaryEntry = Repository.GetDiaryEntry(diaryId, entryId);
+            var diaryEntry = Repository.GetDiaryEntry(_identityService.CurrentUser, diaryId, entryId);
             if (diaryEntry == null)
             {
                 return NotFound();
@@ -50,8 +50,8 @@ namespace NutritionDiary.WebAPI.Controllers
         {
             try
             {
-                var entity = ModelFactory.Parse(model);
-                if (entity == null)
+                var diaryEntry = ModelFactory.Parse(model);
+                if (diaryEntry == null)
                 {
                     return BadRequest("Could not parse diary entry.");
                 }
@@ -62,19 +62,19 @@ namespace NutritionDiary.WebAPI.Controllers
                     return BadRequest("Could not read diary in body.");
                 }
 
-                if (diary.Entries.Any(e => e.Measure.Id == entity.Measure.Id))
+                if (diary.Entries.Any(e => e.Measure.Id == diaryEntry.Measure.Id))
                 {
                     return BadRequest("Duplicate measure not allowed.");
                 }
 
-                diary.Entries.Add(entity);
+                diary.Entries.Add(diaryEntry);
 
                 if (!Repository.Commit())
                 {
                     return BadRequest("Could not save to the database.");
                 }
 
-                var updatedModel = ModelFactory.Create(entity);
+                var updatedModel = ModelFactory.Create(diaryEntry);
                 return Created(updatedModel.Url, updatedModel);
 
             }
