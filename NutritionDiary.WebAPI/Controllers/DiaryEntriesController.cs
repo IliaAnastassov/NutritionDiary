@@ -84,6 +84,41 @@ namespace NutritionDiary.WebAPI.Controllers
             }
         }
 
+        [HttpPut]
+        [HttpPatch]
+        public IHttpActionResult Patch(DateTime diaryId, int entryId, [FromBody]DiaryEntryModel model)
+        {
+            try
+            {
+                var diaryEntry = Repository.GetDiaryEntry(_identityService.CurrentUser, diaryId, entryId);
+                if (diaryEntry == null)
+                {
+                    return NotFound();
+                }
+
+                var parsedDiaryEntry = ModelFactory.Parse(model);
+                if (parsedDiaryEntry == null)
+                {
+                    return BadRequest();
+                }
+
+                if (diaryEntry.Quantity != parsedDiaryEntry.Quantity)
+                {
+                    diaryEntry.Quantity = parsedDiaryEntry.Quantity;
+                    if (Repository.Commit())
+                    {
+                        return Ok(model);
+                    }
+                }
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         public IHttpActionResult Delete(DateTime diaryId, int entryId)
         {
             try

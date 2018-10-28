@@ -83,11 +83,14 @@ namespace NutritionDiary.WebAPI.Models
                     entity.Quantity = model.Quantity;
                 }
 
-                var uri = new Uri(model.MeasureUrl);
-                var measureId = int.Parse(uri.Segments.Last());
-                var measure = _repository.GetMeasure(measureId);
-                entity.Measure = measure;
-                entity.FoodItem = measure.Food;
+                if (!string.IsNullOrWhiteSpace(model.MeasureUrl))
+                {
+                    var uri = new Uri(model.MeasureUrl);
+                    var measureId = int.Parse(uri.Segments.Last());
+                    var measure = _repository.GetMeasure(measureId);
+                    entity.Measure = measure;
+                    entity.FoodItem = measure.Food;
+                }
 
                 return entity;
             }
