@@ -62,6 +62,8 @@ namespace NutritionDiary.Data
         {
             var diary = _db.Diaries
                            .Include(d => d.Entries)
+                           .Include(d => d.Entries.Select(e => e.FoodItem))
+                           .Include(d => d.Entries.Select(e => e.Measure))
                            .Where(d => d.UserName == username && d.CurrentDate == diaryId)
                            .FirstOrDefault();
 
@@ -107,16 +109,7 @@ namespace NutritionDiary.Data
 
         public bool Commit()
         {
-            try
-            {
-                _db.SaveChanges();
-            }
-            catch
-            {
-                return false;
-            }
-
-            return true;
+            return _db.SaveChanges() > 0;
         }
     }
 }
