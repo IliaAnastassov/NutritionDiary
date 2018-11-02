@@ -72,6 +72,17 @@ namespace NutritionDiary.WebAPI.Models
             return model;
         }
 
+        internal object CreateDiarySummary(Diary diary)
+        {
+            var model = new DiarySummaryModel
+            {
+                DiaryDate = diary.CurrentDate,
+                TotalCalories = diary.Entries.Sum(e => e.Measure.Calories * e.Quantity)
+            };
+
+            return model;
+        }
+
         public DiaryEntry Parse(DiaryEntryModel model)
         {
             try
