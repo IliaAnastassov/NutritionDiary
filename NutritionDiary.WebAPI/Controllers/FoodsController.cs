@@ -36,7 +36,7 @@ namespace NutritionDiary.WebAPI.Controllers
                 }
 
                 var totalCount = query.Count();
-                var pageCount = (int)Math.Ceiling((double)totalCount / PAGE_SIZE);
+                var pageCount = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(totalCount) / PAGE_SIZE));
 
                 var foods = query.Skip(PAGE_SIZE * page)
                                  .Take(PAGE_SIZE)
