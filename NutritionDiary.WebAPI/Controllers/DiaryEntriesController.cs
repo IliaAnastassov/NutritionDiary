@@ -23,27 +23,41 @@ namespace NutritionDiary.WebAPI.Controllers
 
         public IHttpActionResult Get(DateTime diaryId)
         {
-            var diaryEntries = Repository.GetDiaryEntries(_identityService.CurrentUser, diaryId)
-                                         .ToList();
-            if (!diaryEntries.Any())
+            try
             {
-                return NotFound();
-            }
+                var diaryEntries = Repository.GetDiaryEntries(_identityService.CurrentUser, diaryId)
+                                             .ToList();
+                if (!diaryEntries.Any())
+                {
+                    return NotFound();
+                }
 
-            var models = diaryEntries.Select(e => ModelFactory.Create(e));
-            return Ok(models);
+                var models = diaryEntries.Select(e => ModelFactory.Create(e));
+                return Ok(models);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         public IHttpActionResult Get(DateTime diaryId, int entryId)
         {
-            var diaryEntry = Repository.GetDiaryEntry(_identityService.CurrentUser, diaryId, entryId);
-            if (diaryEntry == null)
+            try
             {
-                return NotFound();
-            }
+                var diaryEntry = Repository.GetDiaryEntry(_identityService.CurrentUser, diaryId, entryId);
+                if (diaryEntry == null)
+                {
+                    return NotFound();
+                }
 
-            var model = ModelFactory.Create(diaryEntry);
-            return Ok(model);
+                var model = ModelFactory.Create(diaryEntry);
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         public IHttpActionResult Post(DateTime diaryId, [FromBody]DiaryEntryModel model)

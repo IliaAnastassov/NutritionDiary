@@ -20,56 +20,70 @@ namespace NutritionDiary.WebAPI.Controllers
 
         public IHttpActionResult Get(bool includeMeasures = true, int page = 0)
         {
-            IQueryable<Food> query;
-
-            if (includeMeasures)
+            try
             {
-                query = Repository.GetAllFoodsWithMeasures()
-                                  .OrderBy(f => f.Description);
-            }
-            else
-            {
-                query = Repository.GetAllFoods()
-                                  .OrderBy(f => f.Description);
-            }
+                IQueryable<Food> query;
 
-            var totalCount = query.Count();
-            var pageCount = (int)Math.Ceiling((double)totalCount / PAGE_SIZE);
-
-            var foods = query.Skip(PAGE_SIZE * page)
-                             .Take(PAGE_SIZE)
-                             .ToList();
-
-            if (!foods.Any())
-            {
-                return NotFound();
-            }
-
-            var models = foods.Select(f => ModelFactory.Create(f));
-
-            return Ok(
-                new
+                if (includeMeasures)
                 {
-                    TotalCount = totalCount,
-                    PageCount = pageCount,
-                    PrevPageUrl = GetPrevPageUrl(page, pageCount),
-                    NextPageUrl = GetNextPageUrl(page, pageCount),
-                    Results = models
+                    query = Repository.GetAllFoodsWithMeasures()
+                                      .OrderBy(f => f.Description);
                 }
-            );
+                else
+                {
+                    query = Repository.GetAllFoods()
+                                      .OrderBy(f => f.Description);
+                }
+
+                var totalCount = query.Count();
+                var pageCount = (int)Math.Ceiling((double)totalCount / PAGE_SIZE);
+
+                var foods = query.Skip(PAGE_SIZE * page)
+                                 .Take(PAGE_SIZE)
+                                 .ToList();
+
+                if (!foods.Any())
+                {
+                    return NotFound();
+                }
+
+                var models = foods.Select(f => ModelFactory.Create(f));
+
+                return Ok(
+                    new
+                    {
+                        TotalCount = totalCount,
+                        PageCount = pageCount,
+                        PrevPageUrl = GetPrevPageUrl(page, pageCount),
+                        NextPageUrl = GetNextPageUrl(page, pageCount),
+                        Results = models
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         public IHttpActionResult Get(int foodId)
         {
-            var food = Repository.GetFood(foodId);
-
-            if (food == null)
+            try
             {
-                return NotFound();
-            }
+                var food = Repository.GetFood(foodId);
 
-            var model = ModelFactory.Create(food);
-            return Ok(model);
+                if (food == null)
+                {
+                    return NotFound();
+                }
+
+                var model = ModelFactory.Create(food);
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         private string GetPrevPageUrl(int currentPage, int pageCount)

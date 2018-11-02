@@ -22,29 +22,43 @@ namespace NutritionDiary.WebAPI.Controllers
 
         public IHttpActionResult Get()
         {
-            var diaries = Repository.GetDiaries(_identityService.CurrentUser)
-                                    .ToList();
-
-            if (!diaries.Any())
+            try
             {
-                return NotFound();
-            }
+                var diaries = Repository.GetDiaries(_identityService.CurrentUser)
+                                        .ToList();
 
-            var models = diaries.Select(d => ModelFactory.Create(d));
-            return Ok(models);
+                if (!diaries.Any())
+                {
+                    return NotFound();
+                }
+
+                var models = diaries.Select(d => ModelFactory.Create(d));
+                return Ok(models);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         public IHttpActionResult Get(DateTime diaryId)
         {
-            var diary = Repository.GetDiary(_identityService.CurrentUser, diaryId);
-
-            if (diary == null)
+            try
             {
-                return NotFound();
-            }
+                var diary = Repository.GetDiary(_identityService.CurrentUser, diaryId);
 
-            var model = ModelFactory.Create(diary);
-            return Ok(model);
+                if (diary == null)
+                {
+                    return NotFound();
+                }
+
+                var model = ModelFactory.Create(diary);
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
