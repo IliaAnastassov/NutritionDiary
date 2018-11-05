@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Formatting;
-using System.Web.Http;
+﻿using System.Web.Http;
 using Newtonsoft.Json.Serialization;
+using NutritionDiary.WebAPI.Filters;
 
 namespace NutritionDiary.WebAPI
 {
@@ -47,6 +44,9 @@ namespace NutritionDiary.WebAPI
                 routeTemplate: "api/user/diaries/{diaryid}/summary",
                 defaults: new { controller = "diarysummary" }
             );
+
+            // Force HTTPS on entire Web API
+            config.Filters.Add(new RequireHttpsAttribute());
         }
     }
 }
