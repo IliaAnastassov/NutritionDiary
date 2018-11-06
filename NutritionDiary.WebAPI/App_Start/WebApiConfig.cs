@@ -45,8 +45,10 @@ namespace NutritionDiary.WebAPI
                 defaults: new { controller = "diarysummary" }
             );
 
+#if !DEBUG
             // Force HTTPS on entire Web API
             config.Filters.Add(new RequireHttpsAttribute());
+#endif
         }
     }
 }
