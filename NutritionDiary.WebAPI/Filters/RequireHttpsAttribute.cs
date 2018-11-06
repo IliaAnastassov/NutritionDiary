@@ -10,7 +10,7 @@ namespace NutritionDiary.WebAPI.Filters
     public class RequireHttpsAttribute : AuthorizationFilterAttribute
     {
         private const string html = "<div>Https required</div>";
-        private const int httpsPort = 443;
+        private const int portHttps = 443;
 
         public override void OnAuthorization(HttpActionContext actionContext)
         {
@@ -25,7 +25,7 @@ namespace NutritionDiary.WebAPI.Filters
 
                     var uriBuilder = new UriBuilder(request.RequestUri);
                     uriBuilder.Scheme = Uri.UriSchemeHttps;
-                    uriBuilder.Port = httpsPort;
+                    uriBuilder.Port = portHttps;
 
                     actionContext.Response.Headers.Location = uriBuilder.Uri;
                 }
