@@ -1,4 +1,6 @@
-﻿namespace NutritionDiary.WebAPI.Services
+﻿using System.Threading;
+
+namespace NutritionDiary.WebAPI.Services
 {
     public class NutritionDiaryIdentityService : INutritionDiaryIdentityService
     {
@@ -6,7 +8,7 @@
         {
             get
             {
-                return "ianastassov";
+                return Thread.CurrentPrincipal.Identity.Name;
             }
         }
     }

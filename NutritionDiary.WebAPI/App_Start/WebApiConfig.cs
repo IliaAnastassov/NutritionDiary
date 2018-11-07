@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Cors;
 using Newtonsoft.Json.Serialization;
-
+using NutritionDiary.WebAPI.Filters;
 
 namespace NutritionDiary.WebAPI
 {

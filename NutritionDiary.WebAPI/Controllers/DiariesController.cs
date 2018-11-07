@@ -10,6 +10,7 @@ using NutritionDiary.WebAPI.Services;
 
 namespace NutritionDiary.WebAPI.Controllers
 {
+    [Authorize]
     public class DiariesController : BaseApiController
     {
         private INutritionDiaryIdentityService _identityService;
