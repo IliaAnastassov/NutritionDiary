@@ -5,12 +5,13 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using NutritionDiary.Data.Interfaces;
+using NutritionDiary.WebAPI.Filters;
 using NutritionDiary.WebAPI.Models;
 using NutritionDiary.WebAPI.Services;
 
 namespace NutritionDiary.WebAPI.Controllers
 {
-    [Authorize]
+    [NutritionDiaryAuthorize]
     public class DiariesController : BaseApiController
     {
         private INutritionDiaryIdentityService _identityService;
