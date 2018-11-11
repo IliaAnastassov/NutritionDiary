@@ -46,6 +46,12 @@ namespace NutritionDiary.WebAPI
                 defaults: new { controller = "diarysummary" }
             );
 
+            config.Routes.MapHttpRoute(
+                name: "Token",
+                routeTemplate: "api/token",
+                defaults: new { controller = "token" }
+            );
+
             // CORS support
             var policyProvider = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(policyProvider);
