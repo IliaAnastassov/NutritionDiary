@@ -95,6 +95,67 @@ namespace NutritionDiary.Data
             return diaryEntry;
         }
 
+        public ApiUser GetApiUser(string apiKey)
+        {
+            var apiUser = _db.ApiUsers
+                             .Where(u => u.AppId == apiKey)
+                             .FirstOrDefault();
+
+            return apiUser;
+        }
+
+        public bool Insert(Diary diary)
+        {
+            try
+            {
+                _db.Diaries.Add(diary);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool Insert(DiaryEntry diaryEntry)
+        {
+            try
+            {
+                _db.DiaryEntries.Add(diaryEntry);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool Insert(ApiUser apiUser)
+        {
+            try
+            {
+                _db.ApiUsers.Add(apiUser);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool Insert(AuthToken authToken)
+        {
+            try
+            {
+                _db.AuthTokens.Add(authToken);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool DeleteDiaryEntry(int id)
         {
             try
