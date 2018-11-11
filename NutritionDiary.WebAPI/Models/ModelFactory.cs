@@ -72,6 +72,17 @@ namespace NutritionDiary.WebAPI.Models
             return model;
         }
 
+        internal AuthTokenModel Create(AuthToken authToken)
+        {
+            var model = new AuthTokenModel
+            {
+                Token = authToken.Token,
+                Expiration = authToken.Expiration
+            };
+
+            return model;
+        }
+
         internal object CreateDiarySummary(Diary diary)
         {
             var model = new DiarySummaryModel
