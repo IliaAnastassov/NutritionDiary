@@ -104,6 +104,15 @@ namespace NutritionDiary.Data
             return apiUser;
         }
 
+        public AuthToken GetAuthToken(string token)
+        {
+            var authToken = _db.AuthTokens
+                               .Where(t => t.Token == token)
+                               .FirstOrDefault();
+
+            return authToken;
+        }
+
         public bool Insert(Diary diary)
         {
             try

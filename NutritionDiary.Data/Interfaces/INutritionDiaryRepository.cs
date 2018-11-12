@@ -16,6 +16,7 @@ namespace NutritionDiary.Data.Interfaces
         DiaryEntry GetDiaryEntry(string username, DateTime diaryId, int entryId);
         IQueryable<DiaryEntry> GetDiaryEntries(string username, DateTime diaryId);
         ApiUser GetApiUser(string apiKey);
+        AuthToken GetAuthToken(string token);
         bool Insert(Diary diary);
         bool Insert(DiaryEntry diaryEntry);
         bool Insert(ApiUser apiUser);
