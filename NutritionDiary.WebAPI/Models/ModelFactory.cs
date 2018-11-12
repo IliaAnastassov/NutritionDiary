@@ -83,6 +83,25 @@ namespace NutritionDiary.WebAPI.Models
             return model;
         }
 
+        internal MeasureV2Model CreateVersion2(Measure measure)
+        {
+            var model = new MeasureV2Model
+            {
+                Url = _urlHelper.Link("Measures", new { foodid = measure.Food.Id, measureid = measure.Id }),
+                Description = measure.Description,
+                Calories = measure.Calories,
+                TotalFat = measure.TotalFat,
+                Protein = measure.Protein,
+                Carbohydrates = measure.Carbohydrates,
+                Sugar = measure.Sugar,
+                Sodium = measure.Sodium,
+                Iron = measure.Iron,
+                Cholestrol = measure.Cholestrol
+            };
+
+            return model;
+        }
+
         internal object CreateDiarySummary(Diary diary)
         {
             var model = new DiarySummaryModel
