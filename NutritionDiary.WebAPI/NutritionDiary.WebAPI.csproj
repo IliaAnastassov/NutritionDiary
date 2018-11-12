@@ -232,6 +232,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\INutritionDiaryIdentityService.cs" />
     <Compile Include="Services\NutritionDiaryIdentityService.cs" />
+    <Compile Include="Services\UnityFilterProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
