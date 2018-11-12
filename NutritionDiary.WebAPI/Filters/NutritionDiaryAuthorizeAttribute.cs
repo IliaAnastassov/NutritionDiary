@@ -9,6 +9,8 @@ using System.Threading;
 using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using NutritionDiary.Data.Interfaces;
+using Unity.Attributes;
 
 namespace NutritionDiary.WebAPI.Filters
 {
@@ -17,6 +19,8 @@ namespace NutritionDiary.WebAPI.Filters
     /// </summary>
     public class NutritionDiaryAuthorizeAttribute : AuthorizationFilterAttribute
     {
+        private const string API_KEY = "apikey";
+        private const string TOKEN = "token";
         private bool _authorizePerUser;
 
         public NutritionDiaryAuthorizeAttribute(bool authorizePerUser = true)
@@ -24,11 +28,30 @@ namespace NutritionDiary.WebAPI.Filters
             _authorizePerUser = authorizePerUser;
         }
 
+        [Dependency]
+        public INutritionDiaryRepository Repository { get; set; }
+
         public override void OnAuthorization(HttpActionContext actionContext)
         {
-            if (_authorizePerUser)
+            var queryString = HttpUtility.ParseQueryString(actionContext.Request.RequestUri.Query);
+            var apiKey = queryString[API_KEY];
+            var token = queryString[TOKEN];
+
+            if (!string.IsNullOrWhiteSpace(apiKey) && !string.IsNullOrWhiteSpace(token))
             {
-                AuthorizeUser(actionContext);
+                var authToken = Repository.GetAuthToken(token);
+
+                if (authToken != null && authToken.ApiUser.AppId == apiKey && authToken.Expiration > DateTime.UtcNow)
+                {
+                    if (_authorizePerUser)
+                    {
+                        AuthorizeUser(actionContext);
+                    }
+                }
+            }
+            else
+            {
+                HandleUnauthorized(actionContext);
             }
         }
 
@@ -79,7 +102,11 @@ namespace NutritionDiary.WebAPI.Filters
         private void HandleUnauthorized(HttpActionContext actionContext)
         {
             actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-            actionContext.Response.Headers.Add("WWW-Authenticate", "Basic Scheme='Nutrition Diary' location='~/account/login'");
+
+            if (_authorizePerUser)
+            {
+                actionContext.Response.Headers.Add("WWW-Authenticate", "Basic Scheme='Nutrition Diary' location='~/account/login'");
+            }
         }
     }
 }
