@@ -17,19 +17,28 @@ namespace NutritionDiary.WebAPI.Filters
     /// </summary>
     public class NutritionDiaryAuthorizeAttribute : AuthorizationFilterAttribute
     {
+        private bool _authorizePerUser;
+
+        public NutritionDiaryAuthorizeAttribute(bool authorizePerUser = true)
+        {
+            _authorizePerUser = authorizePerUser;
+        }
+
         public override void OnAuthorization(HttpActionContext actionContext)
         {
-            if (Thread.CurrentPrincipal.Identity.IsAuthenticated)
+            if (_authorizePerUser)
             {
-                return;
+                AuthorizeUser(actionContext);
             }
+        }
 
-            var authHeader = actionContext.Request.Headers.Authorization;
-
-            if (authHeader != null)
+        private void AuthorizeUser(HttpActionContext actionContext)
+        {
+            if (!Thread.CurrentPrincipal.Identity.IsAuthenticated)
             {
-                if (authHeader.Scheme.Equals("basic", StringComparison.OrdinalIgnoreCase)
-                    && !string.IsNullOrWhiteSpace(authHeader.Parameter))
+                var authHeader = actionContext.Request.Headers.Authorization;
+
+                if (ValidateAuthHeader(authHeader))
                 {
                     var rawCredentials = authHeader.Parameter;
                     var encoding = Encoding.GetEncoding("iso-8859-1");
@@ -39,14 +48,26 @@ namespace NutritionDiary.WebAPI.Filters
 
                     if (Login(username, password))
                     {
-                        var principal = new GenericPrincipal(new GenericIdentity(username), roles: null);
-                        Thread.CurrentPrincipal = principal;
-                        return;
+                        var identity = new GenericIdentity(username);
+                        Thread.CurrentPrincipal = new GenericPrincipal(identity, roles: null);
+                    }
+                    else
+                    {
+                        HandleUnauthorized(actionContext);
                     }
                 }
+                else
+                {
+                    HandleUnauthorized(actionContext);
+                }
             }
+        }
 
-            HandleUnauthorized(actionContext);
+        private bool ValidateAuthHeader(System.Net.Http.Headers.AuthenticationHeaderValue authHeader)
+        {
+            return authHeader != null
+                && authHeader.Scheme.Equals("basic", StringComparison.OrdinalIgnoreCase)
+                && !string.IsNullOrWhiteSpace(authHeader.Parameter);
         }
 
         private bool Login(string username, string password)
