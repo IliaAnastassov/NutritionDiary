@@ -28,7 +28,7 @@ namespace NutritionDiary.WebAPI.Controllers
                     var hash = provider.ComputeHash(Encoding.UTF8.GetBytes(apiUser.AppId));
                     var signature = Convert.ToBase64String(hash);
 
-                    if (StringComparer.Ordinal.Equals(signature, model.Signature))
+                    if (signature.Equals(model.Signature))
                     {
                         var rawTokenInfo = string.Concat(apiUser.AppId, DateTime.UtcNow.ToString("d"));
                         var rawTokenByte = Encoding.UTF8.GetBytes(rawTokenInfo);
