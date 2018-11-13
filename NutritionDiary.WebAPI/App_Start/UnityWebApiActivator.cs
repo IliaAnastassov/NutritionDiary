@@ -23,11 +23,6 @@ namespace NutritionDiary.WebAPI
             // var resolver = new UnityHierarchicalDependencyResolver(UnityConfig.Container);
             var resolver = new UnityDependencyResolver(UnityConfig.Container);
             GlobalConfiguration.Configuration.DependencyResolver = resolver;
-
-            GlobalConfiguration.Configuration.Services.Add(
-                typeof(IFilterProvider),
-                new UnityFilterProvider(UnityConfig.Container)
-            );
         }
 
         /// <summary>

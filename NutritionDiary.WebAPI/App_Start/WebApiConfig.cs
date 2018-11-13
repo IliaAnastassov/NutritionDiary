@@ -1,7 +1,8 @@
 ﻿using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Web.Http.Filters;
 using Newtonsoft.Json.Serialization;
-using NutritionDiary.WebAPI.Filters;
+using NutritionDiary.WebAPI.Services;
 
 namespace NutritionDiary.WebAPI
 {
@@ -55,6 +56,9 @@ namespace NutritionDiary.WebAPI
             // CORS support
             var policyProvider = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(policyProvider);
+
+            // Enable DI for filters / attributes
+            config.Services.Add(typeof(IFilterProvider), new UnityFilterProvider(UnityConfig.Container));
 
 #if !DEBUG
             // Force HTTPS on entire Web API
