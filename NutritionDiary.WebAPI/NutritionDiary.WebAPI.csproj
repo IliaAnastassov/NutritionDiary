@@ -233,6 +233,7 @@
     <Compile Include="Models\TokenRequestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\INutritionDiaryIdentityService.cs" />
+    <Compile Include="Services\NutritionDiaryControllerSelector.cs" />
     <Compile Include="Services\NutritionDiaryIdentityService.cs" />
     <Compile Include="Services\UnityFilterProvider.cs" />
   </ItemGroup>
