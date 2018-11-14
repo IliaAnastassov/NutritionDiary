@@ -87,7 +87,7 @@ namespace NutritionDiary.WebAPI.Models
         {
             var model = new MeasureV2Model
             {
-                Url = _urlHelper.Link("Measures", new { foodid = measure.Food.Id, measureid = measure.Id, v = 2 }),
+                Url = _urlHelper.Link("Measures", new { foodid = measure.Food.Id, measureid = measure.Id }),
                 Description = measure.Description,
                 Calories = measure.Calories,
                 TotalFat = measure.TotalFat,
