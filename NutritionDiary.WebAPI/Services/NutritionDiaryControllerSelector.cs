@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -14,8 +13,10 @@ namespace NutritionDiary.WebAPI.Services
         private const string CONTROLLER_KEY = "controller";
         private const string VERSIONED_CONTROLLER_FORMAT = "{0}V{1}";
         private const string VERSION_QUERY_KEY = "v";
+        private const string VERSION_ACCEPT_HEADER_KEY = "version";
         private const string DEFAULT_VERSION = "1";
         private const string VERSION_HEADER_NAME = "X-NutritionDiary-Version";
+        private const string JSON_MEDIA_TYPE = "application/json";
         private HttpConfiguration _configuration;
 
         public NutritionDiaryControllerSelector(HttpConfiguration configuration)
@@ -32,7 +33,7 @@ namespace NutritionDiary.WebAPI.Services
 
             if (controllers.TryGetValue(controllerName, out HttpControllerDescriptor descriptor))
             {
-                var version = GetVersionFrom(request.Headers);
+                var version = GetVersionFromAcceptHeader(request);
                 var versionedControllerName = string.Format(VERSIONED_CONTROLLER_FORMAT, controllerName, version);
 
                 if (controllers.TryGetValue(versionedControllerName, out HttpControllerDescriptor versionedControllerDescriptor))
@@ -44,13 +45,35 @@ namespace NutritionDiary.WebAPI.Services
             return descriptor;
         }
 
-        private string GetVersionFrom(HttpRequestHeaders requestHeaders)
+        private string GetVersionFromAcceptHeader(HttpRequestMessage request)
+        {
+            var version = DEFAULT_VERSION;
+            var acceptHeader = request.Headers.Accept;
+
+            foreach (var mimeType in acceptHeader)
+            {
+                if (mimeType.MediaType == JSON_MEDIA_TYPE)
+                {
+                    var versionParameter = mimeType.Parameters
+                                                   .FirstOrDefault(p => p.Name.Equals(VERSION_ACCEPT_HEADER_KEY, StringComparison.OrdinalIgnoreCase));
+
+                    if (versionParameter != null && !string.IsNullOrWhiteSpace(versionParameter.Value))
+                    {
+                        version = versionParameter.Value;
+                    }
+                }
+            }
+
+            return version;
+        }
+
+        private string GetVersionFromRequestHeader(HttpRequestMessage request)
         {
             var version = DEFAULT_VERSION;
 
-            if (requestHeaders.Contains(VERSION_HEADER_NAME))
+            if (request.Headers.Contains(VERSION_HEADER_NAME))
             {
-                var versionHeaderValue = requestHeaders.GetValues(VERSION_HEADER_NAME).FirstOrDefault();
+                var versionHeaderValue = request.Headers.GetValues(VERSION_HEADER_NAME).FirstOrDefault();
 
                 if (!string.IsNullOrWhiteSpace(versionHeaderValue))
                 {
@@ -61,9 +84,9 @@ namespace NutritionDiary.WebAPI.Services
             return version;
         }
 
-        private string GetVersionFrom(string queryString)
+        private string GetVersionFromQueryString(HttpRequestMessage request)
         {
-            var query = HttpUtility.ParseQueryString(queryString);
+            var query = HttpUtility.ParseQueryString(request.RequestUri.Query);
             var version = query[VERSION_QUERY_KEY];
 
             if (string.IsNullOrWhiteSpace(version))
