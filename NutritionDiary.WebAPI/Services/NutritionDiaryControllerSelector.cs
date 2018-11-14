@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
@@ -17,6 +18,8 @@ namespace NutritionDiary.WebAPI.Services
         private const string DEFAULT_VERSION = "1";
         private const string VERSION_HEADER_NAME = "X-NutritionDiary-Version";
         private const string JSON_MEDIA_TYPE = "application/json";
+        private const string VERSION_REGEX = @"application\/vnd\.nutritiondiary\.([a-z]+)\.v([0-9]+)\+json";
+        private const int VERSION_REGEX_GROUP_INDEX = 2;
         private HttpConfiguration _configuration;
 
         public NutritionDiaryControllerSelector(HttpConfiguration configuration)
@@ -33,7 +36,7 @@ namespace NutritionDiary.WebAPI.Services
 
             if (controllers.TryGetValue(controllerName, out HttpControllerDescriptor descriptor))
             {
-                var version = GetVersionFromAcceptHeader(request);
+                var version = GetVersionFromMediaType(request);
                 var versionedControllerName = string.Format(VERSIONED_CONTROLLER_FORMAT, controllerName, version);
 
                 if (controllers.TryGetValue(versionedControllerName, out HttpControllerDescriptor versionedControllerDescriptor))
@@ -45,17 +48,36 @@ namespace NutritionDiary.WebAPI.Services
             return descriptor;
         }
 
+        private string GetVersionFromMediaType(HttpRequestMessage request)
+        {
+            var version = DEFAULT_VERSION;
+            var acceptHeader = request.Headers.Accept;
+            var expression = new Regex(VERSION_REGEX, RegexOptions.IgnoreCase);
+
+            foreach (var mime in acceptHeader)
+            {
+                var match = expression.Match(mime.MediaType);
+
+                if (match.Success)
+                {
+                    version = match.Groups[VERSION_REGEX_GROUP_INDEX].Value;
+                }
+            }
+
+            return version;
+        }
+
         private string GetVersionFromAcceptHeader(HttpRequestMessage request)
         {
             var version = DEFAULT_VERSION;
             var acceptHeader = request.Headers.Accept;
 
-            foreach (var mimeType in acceptHeader)
+            foreach (var mime in acceptHeader)
             {
-                if (mimeType.MediaType == JSON_MEDIA_TYPE)
+                if (mime.MediaType == JSON_MEDIA_TYPE)
                 {
-                    var versionParameter = mimeType.Parameters
-                                                   .FirstOrDefault(p => p.Name.Equals(VERSION_ACCEPT_HEADER_KEY, StringComparison.OrdinalIgnoreCase));
+                    var versionParameter = mime.Parameters
+                                               .FirstOrDefault(p => p.Name.Equals(VERSION_ACCEPT_HEADER_KEY, StringComparison.OrdinalIgnoreCase));
 
                     if (versionParameter != null && !string.IsNullOrWhiteSpace(versionParameter.Value))
                     {
