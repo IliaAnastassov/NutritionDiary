@@ -1,4 +1,7 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
+using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.Filters;
@@ -14,6 +17,23 @@ namespace NutritionDiary.WebAPI
             // Web API configuration and services
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+
+            CreateCustomMediaTypes(config.Formatters.JsonFormatter);
+
+            // Enable DI for filters / attributes
+            config.Services.Add(typeof(IFilterProvider), new UnityFilterProvider(UnityConfig.Container));
+
+            // Replace default controller selector
+            config.Services.Replace(typeof(IHttpControllerSelector), new NutritionDiaryControllerSelector(config));
+
+            // CORS support
+            var policyProvider = new EnableCorsAttribute("*", "*", "*");
+            config.EnableCors(policyProvider);
+
+#if !DEBUG
+            // Force HTTPS on entire Web API
+            config.Filters.Add(new RequireHttpsAttribute());
+#endif
 
             // Web API routes
             config.MapHttpAttributeRoutes();
@@ -53,21 +73,23 @@ namespace NutritionDiary.WebAPI
                 routeTemplate: "api/token",
                 defaults: new { controller = "token" }
             );
+        }
 
-            // CORS support
-            var policyProvider = new EnableCorsAttribute("*", "*", "*");
-            config.EnableCors(policyProvider);
+        private static void CreateCustomMediaTypes(JsonMediaTypeFormatter jsonFormatter)
+        {
+            var mediaTypes = new string[]
+            {
+                "application/vnd.nutritiondiary.food.v1+json",
+                "application/vnd.nutritiondiary.measure.v1+json",
+                "application/vnd.nutritiondiary.measure.v2+json",
+                "application/vnd.nutritiondiary.diary.v1+json",
+                "application/vnd.nutritiondiary.diaryEntry.v1+json"
+            };
 
-            // Enable DI for filters / attributes
-            config.Services.Add(typeof(IFilterProvider), new UnityFilterProvider(UnityConfig.Container));
-
-            // Replace default controller selector
-            config.Services.Replace(typeof(IHttpControllerSelector), new NutritionDiaryControllerSelector(config));
-
-#if !DEBUG
-            // Force HTTPS on entire Web API
-            config.Filters.Add(new RequireHttpsAttribute());
-#endif
+            foreach (var mediaType in mediaTypes)
+            {
+                jsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue(mediaType));
+            }
         }
     }
 }
