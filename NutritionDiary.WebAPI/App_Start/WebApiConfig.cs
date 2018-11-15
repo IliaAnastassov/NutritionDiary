@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Web.Http;
@@ -6,6 +7,7 @@ using System.Web.Http.Cors;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.Filters;
 using CacheCow.Server;
+using CacheCow.Server.EntityTagStore.SqlServer;
 using Newtonsoft.Json.Serialization;
 using NutritionDiary.WebAPI.Services;
 
@@ -13,6 +15,8 @@ namespace NutritionDiary.WebAPI
 {
     public static class WebApiConfig
     {
+        private const string DEFAULT_CONNECTION_KEY = "DefaultConnection";
+
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
@@ -28,7 +32,9 @@ namespace NutritionDiary.WebAPI
             config.Services.Replace(typeof(IHttpControllerSelector), new NutritionDiaryControllerSelector(config));
 
             // Configure Caching/ETag support
-            var cacheHandler = new CachingHandler(config);
+            var connectionString = ConfigurationManager.ConnectionStrings[DEFAULT_CONNECTION_KEY].ConnectionString;
+            var etagStore = new SqlServerEntityTagStore(connectionString);
+            var cacheHandler = new CachingHandler(config, etagStore);
             config.MessageHandlers.Add(cacheHandler);
 
             // CORS support
