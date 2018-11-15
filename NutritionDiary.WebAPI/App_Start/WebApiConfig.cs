@@ -5,6 +5,7 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Dispatcher;
 using System.Web.Http.Filters;
+using CacheCow.Server;
 using Newtonsoft.Json.Serialization;
 using NutritionDiary.WebAPI.Services;
 
@@ -25,6 +26,10 @@ namespace NutritionDiary.WebAPI
 
             // Replace default controller selector
             config.Services.Replace(typeof(IHttpControllerSelector), new NutritionDiaryControllerSelector(config));
+
+            // Configure Caching/ETag support
+            var cacheHandler = new CachingHandler(config);
+            config.MessageHandlers.Add(cacheHandler);
 
             // CORS support
             var policyProvider = new EnableCorsAttribute("*", "*", "*");
