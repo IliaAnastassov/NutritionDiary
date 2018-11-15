@@ -45,6 +45,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CacheCow.Common, Version=1.1.0.0, Culture=neutral, PublicKeyToken=6ea79c41d0a2c478, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheCow.Common.sn.1.1.1\lib\CacheCow.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="CacheCow.Server, Version=1.1.0.0, Culture=neutral, PublicKeyToken=6ea79c41d0a2c478, processorArchitecture=MSIL">
+      <HintPath>..\packages\CacheCow.Server.sn.1.1.0\lib\CacheCow.Server.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
