@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Routing;
@@ -9,6 +10,8 @@ namespace NutritionDiary.WebAPI.Models
 {
     public class ModelFactory
     {
+        private const string SELF_REL = "self";
+
         private UrlHelper _urlHelper;
         private INutritionDiaryRepository _repository;
 
@@ -22,9 +25,16 @@ namespace NutritionDiary.WebAPI.Models
         {
             var model = new FoodModel
             {
-                Url = _urlHelper.Link("Foods", new { foodid = food.Id }),
                 Description = food.Description,
-                Measures = food.Measures.Select(m => Create(m))
+                Measures = food.Measures.Select(m => Create(m)),
+                Links = new List<LinkModel>
+                {
+                    new LinkModel
+                    {
+                        Href = _urlHelper.Link("Foods", new { foodid = food.Id }),
+                        Rel = SELF_REL
+                    }
+                }
             };
 
             return model;
@@ -48,9 +58,16 @@ namespace NutritionDiary.WebAPI.Models
 
         public DiaryModel Create(Diary diary)
         {
+            var selfHref = _urlHelper.Link("Diaries", new { diaryid = diary.CurrentDate.ToString("yyyy-MM-dd") });
+            var createDiaryEntryHref = _urlHelper.Link("DiaryEntries", new { diaryid = diary.CurrentDate.ToString("yyyy-MM-dd") });
+
             var model = new DiaryModel
             {
-                Url = _urlHelper.Link("Diaries", new { diaryid = diary.CurrentDate.ToString("yyyy-MM-dd") }),
+                Links = new List<LinkModel>
+                {
+                    CreateLink(selfHref, SELF_REL),
+                    CreateLink(createDiaryEntryHref, "newDiaryEntry", "POST")
+                },
                 CurrentDate = diary.CurrentDate,
                 DiaryEntries = diary.Entries.Select(e => Create(e))
             };
@@ -111,6 +128,51 @@ namespace NutritionDiary.WebAPI.Models
             };
 
             return model;
+        }
+
+        public LinkModel CreateLink(string href, string rel, string method = "GET", bool isTemplated = false)
+        {
+            var link = new LinkModel
+            {
+                Href = href,
+                Rel = rel,
+                Method = method,
+                IsTemplated = isTemplated
+            };
+
+            return link;
+        }
+
+        public Diary Parse(DiaryModel model)
+        {
+            try
+            {
+                var entity = new Diary();
+
+                var selfLink = model.Links.FirstOrDefault(l => l.Rel == SELF_REL);
+                if (selfLink != null && !string.IsNullOrWhiteSpace(selfLink.Href))
+                {
+                    var uri = new Uri(selfLink.Href);
+                    entity.Id = int.Parse(uri.Segments.Last());
+                }
+
+                entity.CurrentDate = model.CurrentDate;
+
+                if (model.DiaryEntries != null)
+                {
+                    foreach (var entryModel in model.DiaryEntries)
+                    {
+                        var entry = Parse(entryModel);
+                        entity.Entries.Add(entry);
+                    }
+                }
+
+                return entity;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public DiaryEntry Parse(DiaryEntryModel model)

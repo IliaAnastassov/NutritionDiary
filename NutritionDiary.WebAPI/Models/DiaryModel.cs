@@ -5,7 +5,7 @@ namespace NutritionDiary.WebAPI.Models
 {
     public class DiaryModel
     {
-        public string Url { get; set; }
+        public IEnumerable<LinkModel> Links { get; set; }
         public DateTime CurrentDate { get; set; }
         public IEnumerable<DiaryEntryModel> DiaryEntries { get; set; }
     }
