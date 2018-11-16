@@ -5,13 +5,12 @@ using System.Net.Http;
 using System.Web.Http.Routing;
 using NutritionDiary.Data.Interfaces;
 using NutritionDiary.Entities;
+using static NutritionDiary.WebAPI.Utilities.Constants;
 
 namespace NutritionDiary.WebAPI.Models
 {
     public class ModelFactory
     {
-        private const string SELF_REL = "self";
-
         private UrlHelper _urlHelper;
         private INutritionDiaryRepository _repository;
 

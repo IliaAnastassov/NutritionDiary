@@ -246,6 +246,7 @@
     <Compile Include="Services\NutritionDiaryControllerSelector.cs" />
     <Compile Include="Services\NutritionDiaryIdentityService.cs" />
     <Compile Include="Services\UnityFilterProvider.cs" />
+    <Compile Include="Utilities\Constants.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
