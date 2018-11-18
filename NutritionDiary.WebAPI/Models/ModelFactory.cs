@@ -22,18 +22,16 @@ namespace NutritionDiary.WebAPI.Models
 
         public FoodModel Create(Food food)
         {
+            var selfHref = _urlHelper.Link(FOODS_ROUTE, new { foodid = food.Id });
+
             var model = new FoodModel
             {
-                Description = food.Description,
-                Measures = food.Measures.Select(m => Create(m)),
                 Links = new List<LinkModel>
                 {
-                    new LinkModel
-                    {
-                        Href = _urlHelper.Link("Foods", new { foodid = food.Id }),
-                        Rel = SELF_REL
-                    }
-                }
+                    CreateLink(selfHref, SELF_REL)
+                },
+                Description = food.Description,
+                Measures = food.Measures.Select(m => Create(m))
             };
 
             return model;
@@ -41,9 +39,15 @@ namespace NutritionDiary.WebAPI.Models
 
         public MeasureModel Create(Measure measure)
         {
+            var selfHref = _urlHelper.Link(MEASURES_ROUTE, new { foodid = measure.Food.Id, measureid = measure.Id });
+            var selfLink = CreateLink(selfHref, SELF_REL);
+
             var model = new MeasureModel
             {
-                Url = _urlHelper.Link("Measures", new { foodid = measure.Food.Id, measureid = measure.Id }),
+                Links = new List<LinkModel>
+                {
+                    selfLink
+                },
                 Description = measure.Description,
                 Calories = measure.Calories,
                 TotalFat = measure.TotalFat,
@@ -57,15 +61,18 @@ namespace NutritionDiary.WebAPI.Models
 
         public DiaryModel Create(Diary diary)
         {
-            var selfHref = _urlHelper.Link("Diaries", new { diaryid = diary.CurrentDate.ToString("yyyy-MM-dd") });
-            var createDiaryEntryHref = _urlHelper.Link("DiaryEntries", new { diaryid = diary.CurrentDate.ToString("yyyy-MM-dd") });
+            var selfHref = _urlHelper.Link(DIARIES_ROUTE, new { diaryid = diary.CurrentDate.ToString(DIARY_DATE_FORMAT) });
+            var selfLink = CreateLink(selfHref, SELF_REL);
+
+            var diaryEntryHref = _urlHelper.Link(DIARY_ENTRIES_ROUTE, new { diaryid = diary.CurrentDate.ToString(DIARY_DATE_FORMAT) });
+            var diaryEntryLink = CreateLink(diaryEntryHref, NEW_DIARY_ENTRY_REL, POST);
 
             var model = new DiaryModel
             {
                 Links = new List<LinkModel>
                 {
-                    CreateLink(selfHref, SELF_REL),
-                    CreateLink(createDiaryEntryHref, "newDiaryEntry", "POST")
+                    selfLink,
+                    diaryEntryLink
                 },
                 CurrentDate = diary.CurrentDate,
                 DiaryEntries = diary.Entries.Select(e => Create(e))
@@ -76,12 +83,18 @@ namespace NutritionDiary.WebAPI.Models
 
         public DiaryEntryModel Create(DiaryEntry diaryEntry)
         {
+            var selfHref = _urlHelper.Link(DIARY_ENTRIES_ROUTE, new { diaryid = diaryEntry.Diary.CurrentDate.ToString(DIARY_DATE_FORMAT), entryid = diaryEntry.Id });
+            var selfLink = CreateLink(selfHref, SELF_REL);
+
             var model = new DiaryEntryModel
             {
-                Url = _urlHelper.Link("DiaryEntries", new { diaryid = diaryEntry.Diary.CurrentDate.ToString("yyyy-MM-dd"), entryid = diaryEntry.Id }),
+                Links = new List<LinkModel>
+                {
+                    selfLink
+                },
                 FoodDescription = diaryEntry.FoodItem.Description,
                 MeasureDescription = diaryEntry.Measure.Description,
-                MeasureUrl = _urlHelper.Link("Measures", new { foodid = diaryEntry.FoodItem.Id, measureid = diaryEntry.Measure.Id }),
+                MeasureUrl = _urlHelper.Link(MEASURES_ROUTE, new { foodid = diaryEntry.FoodItem.Id, measureid = diaryEntry.Measure.Id }),
                 Quantity = diaryEntry.Quantity
             };
 
@@ -101,9 +114,15 @@ namespace NutritionDiary.WebAPI.Models
 
         internal MeasureV2Model CreateVersion2(Measure measure)
         {
+            var selfHref = _urlHelper.Link(MEASURES_ROUTE, new { foodid = measure.Food.Id, measureid = measure.Id });
+            var selfLink = CreateLink(selfHref, SELF_REL);
+
             var model = new MeasureV2Model
             {
-                Url = _urlHelper.Link("Measures", new { foodid = measure.Food.Id, measureid = measure.Id }),
+                Links = new List<LinkModel>
+                {
+                    selfLink
+                },
                 Description = measure.Description,
                 Calories = measure.Calories,
                 TotalFat = measure.TotalFat,
@@ -127,19 +146,6 @@ namespace NutritionDiary.WebAPI.Models
             };
 
             return model;
-        }
-
-        public LinkModel CreateLink(string href, string rel, string method = "GET", bool isTemplated = false)
-        {
-            var link = new LinkModel
-            {
-                Href = href,
-                Rel = rel,
-                Method = method,
-                IsTemplated = isTemplated
-            };
-
-            return link;
         }
 
         public Diary Parse(DiaryModel model)
@@ -200,6 +206,19 @@ namespace NutritionDiary.WebAPI.Models
             {
                 return null;
             }
+        }
+
+        public LinkModel CreateLink(string href, string rel, string method = GET, bool isTemplated = false)
+        {
+            var link = new LinkModel
+            {
+                Href = href,
+                Rel = rel,
+                Method = method,
+                IsTemplated = isTemplated
+            };
+
+            return link;
         }
     }
 }

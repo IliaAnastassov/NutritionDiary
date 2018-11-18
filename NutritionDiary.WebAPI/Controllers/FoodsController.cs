@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Http;
@@ -6,6 +7,7 @@ using System.Web.Http.Routing;
 using NutritionDiary.Data.Interfaces;
 using NutritionDiary.Entities;
 using NutritionDiary.WebAPI.Models;
+using static NutritionDiary.WebAPI.Utilities.Constants;
 
 namespace NutritionDiary.WebAPI.Controllers
 {
@@ -36,7 +38,7 @@ namespace NutritionDiary.WebAPI.Controllers
                 }
 
                 var totalCount = query.Count();
-                var pageCount = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(totalCount) / PAGE_SIZE));
+                var pageCount = Convert.ToInt32(Math.Ceiling((double)totalCount / PAGE_SIZE));
 
                 var foods = query.Skip(PAGE_SIZE * page)
                                  .Take(PAGE_SIZE)
@@ -54,8 +56,7 @@ namespace NutritionDiary.WebAPI.Controllers
                     {
                         TotalCount = totalCount,
                         PageCount = pageCount,
-                        PrevPageUrl = GetPrevPageUrl(page, pageCount),
-                        NextPageUrl = GetNextPageUrl(page, pageCount),
+                        Links = GetLinks(page, pageCount),
                         Results = models
                     }
                 );
@@ -84,6 +85,27 @@ namespace NutritionDiary.WebAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        private IEnumerable<LinkModel> GetLinks(int currentPage, int pageCount)
+        {
+            var links = new List<LinkModel>();
+
+            var prevPageUrl = GetPrevPageUrl(currentPage, pageCount);
+            if (!string.IsNullOrEmpty(prevPageUrl))
+            {
+                var prevPageLink = ModelFactory.CreateLink(prevPageUrl, PREV_PAGE_REL);
+                links.Add(prevPageLink);
+            }
+
+            var nextPageUrl = GetNextPageUrl(currentPage, pageCount);
+            if (!string.IsNullOrEmpty(nextPageUrl))
+            {
+                var nextPageLink = ModelFactory.CreateLink(nextPageUrl, NEXT_PAGE_REL);
+                links.Add(nextPageLink);
+            }
+
+            return links;
         }
 
         private string GetPrevPageUrl(int currentPage, int pageCount)

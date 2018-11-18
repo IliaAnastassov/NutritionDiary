@@ -8,6 +8,7 @@ using NutritionDiary.Data.Interfaces;
 using NutritionDiary.Entities;
 using NutritionDiary.WebAPI.Models;
 using NutritionDiary.WebAPI.Services;
+using static NutritionDiary.WebAPI.Utilities.Constants;
 
 namespace NutritionDiary.WebAPI.Controllers
 {
@@ -89,8 +90,11 @@ namespace NutritionDiary.WebAPI.Controllers
                 }
 
                 var updatedModel = ModelFactory.Create(diaryEntry);
-                return Created(updatedModel.Url, updatedModel);
+                var location = updatedModel.Links
+                                           .Select(l => l.Href)
+                                           .FirstOrDefault(h => h == SELF_REL);
 
+                return Created(location, updatedModel);
             }
             catch (Exception ex)
             {
