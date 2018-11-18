@@ -8,7 +8,10 @@ namespace NutritionDiary.WebAPI.Services
         {
             get
             {
+#if !DEBUG
                 return Thread.CurrentPrincipal.Identity.Name;
+#endif
+                return "ianastassov";
             }
         }
     }

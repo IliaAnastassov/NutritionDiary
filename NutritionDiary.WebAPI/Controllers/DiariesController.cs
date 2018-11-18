@@ -11,7 +11,9 @@ using NutritionDiary.WebAPI.Services;
 
 namespace NutritionDiary.WebAPI.Controllers
 {
+#if !DEBUG
     [NutritionDiaryAuthorize]
+#endif
     public class DiariesController : BaseApiController
     {
         private INutritionDiaryIdentityService _identityService;
