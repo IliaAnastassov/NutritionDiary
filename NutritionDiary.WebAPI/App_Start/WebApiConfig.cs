@@ -8,6 +8,7 @@ using System.Web.Http.Filters;
 using CacheCow.Server;
 using CacheCow.Server.EntityTagStore.SqlServer;
 using Newtonsoft.Json.Serialization;
+using NutritionDiary.WebAPI.Converters;
 using NutritionDiary.WebAPI.Services;
 using static NutritionDiary.WebAPI.Utilities.Constants;
 
@@ -18,9 +19,9 @@ namespace NutritionDiary.WebAPI
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.Formatters.Remove(config.Formatters.XmlFormatter);
-
+            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            config.Formatters.JsonFormatter.SerializerSettings.Converters.Add(new LinkModelConverter());
             CreateCustomMediaTypes(config.Formatters.JsonFormatter);
 
             // Enable DI for filters / attributes
