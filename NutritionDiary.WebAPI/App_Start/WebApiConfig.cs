@@ -28,7 +28,7 @@ namespace NutritionDiary.WebAPI
             config.Services.Add(typeof(IFilterProvider), new UnityFilterProvider(UnityConfig.Container));
 
             // Replace default controller selector
-            config.Services.Replace(typeof(IHttpControllerSelector), new NutritionDiaryControllerSelector(config));
+            ////config.Services.Replace(typeof(IHttpControllerSelector), new NutritionDiaryControllerSelector(config));
 
             // Configure Caching/ETag support
             var connectionString = ConfigurationManager.ConnectionStrings[DEFAULT_CONNECTION_KEY].ConnectionString;
@@ -47,12 +47,6 @@ namespace NutritionDiary.WebAPI
 
             // Web API routes
             config.MapHttpAttributeRoutes();
-
-            config.Routes.MapHttpRoute(
-                name: FOODS_ROUTE,
-                routeTemplate: "api/nutrition/foods/{foodid}",
-                defaults: new { controller = "foods", foodid = RouteParameter.Optional }
-            );
 
             config.Routes.MapHttpRoute(
                 name: MEASURES_ROUTE,

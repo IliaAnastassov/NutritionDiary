@@ -95,6 +95,11 @@ namespace NutritionDiary.Data
             return diaryEntry;
         }
 
+        public IQueryable<ApiUser> GetApiUsers()
+        {
+            return _db.ApiUsers;
+        }
+
         public ApiUser GetApiUser(string apiKey)
         {
             var apiUser = _db.ApiUsers
