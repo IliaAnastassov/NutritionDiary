@@ -11,7 +11,6 @@ namespace NutritionDiary.WebAPI.Services
 {
     public class NutritionDiaryControllerSelector : DefaultHttpControllerSelector
     {
-        private const string CONTROLLER_KEY = "controller";
         private const string VERSIONED_CONTROLLER_FORMAT = "{0}V{1}";
         private const string VERSION_QUERY_KEY = "v";
         private const string VERSION_ACCEPT_HEADER_KEY = "version";
@@ -20,32 +19,26 @@ namespace NutritionDiary.WebAPI.Services
         private const string JSON_MEDIA_TYPE = "application/json";
         private const string VERSION_REGEX = @"application\/vnd\.nutritiondiary\.([a-z]+)\.v([0-9]+)\+json";
         private const int VERSION_REGEX_GROUP_INDEX = 2;
-        private HttpConfiguration _configuration;
 
         public NutritionDiaryControllerSelector(HttpConfiguration configuration)
             : base(configuration)
         {
-            _configuration = configuration;
         }
 
         public override HttpControllerDescriptor SelectController(HttpRequestMessage request)
         {
             var controllers = GetControllerMapping();
-            var routeData = request.GetRouteData();
-            var controllerName = (string)routeData.Values[CONTROLLER_KEY];
+            var controllerDescriptor = base.SelectController(request);
 
-            if (controllers.TryGetValue(controllerName, out HttpControllerDescriptor descriptor))
+            var version = GetVersionFromMediaType(request);
+            var versionedControllerName = string.Format(VERSIONED_CONTROLLER_FORMAT, controllerDescriptor.ControllerName, version);
+
+            if (controllers.TryGetValue(versionedControllerName, out HttpControllerDescriptor versionedControllerDescriptor))
             {
-                var version = GetVersionFromMediaType(request);
-                var versionedControllerName = string.Format(VERSIONED_CONTROLLER_FORMAT, controllerName, version);
-
-                if (controllers.TryGetValue(versionedControllerName, out HttpControllerDescriptor versionedControllerDescriptor))
-                {
-                    descriptor = versionedControllerDescriptor;
-                }
+                controllerDescriptor = versionedControllerDescriptor;
             }
 
-            return descriptor;
+            return controllerDescriptor;
         }
 
         private string GetVersionFromMediaType(HttpRequestMessage request)

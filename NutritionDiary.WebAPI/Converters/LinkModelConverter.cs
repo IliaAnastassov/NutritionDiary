@@ -18,9 +18,7 @@ namespace NutritionDiary.WebAPI.Converters
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var model = value as LinkModel;
-
-            if (model != null)
+            if (value is LinkModel model)
             {
                 writer.WriteStartObject();
 
