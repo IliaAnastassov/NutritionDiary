@@ -13,14 +13,14 @@ namespace NutritionDiary.WebAPI.ActionResults
         where T : class
     {
         private HttpRequestMessage _request;
-        private string _version;
         private T _body;
+        private string _version;
 
-        public VersionedActionResult(HttpRequestMessage request, string version, T body)
+        public VersionedActionResult(HttpRequestMessage request, T body, string version)
         {
             _request = request;
-            _version = version;
             _body = body;
+            _version = version;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
