@@ -11,7 +11,6 @@ using static NutritionDiary.WebAPI.Utilities.Constants;
 
 namespace NutritionDiary.WebAPI.Controllers
 {
-    [RoutePrefix("api/nutrition/foods")]
     public class FoodsController : BaseApiController
     {
         private const int PAGE_SIZE = 2;
@@ -21,7 +20,6 @@ namespace NutritionDiary.WebAPI.Controllers
         {
         }
 
-        [Route("", Name = FOODS_ROUTE)]
         public IHttpActionResult Get(bool includeMeasures = true, int page = 0)
         {
             try
@@ -69,7 +67,6 @@ namespace NutritionDiary.WebAPI.Controllers
             }
         }
 
-        [Route("foodid", Name = "Food")]
         public IHttpActionResult Get(int foodId)
         {
             try

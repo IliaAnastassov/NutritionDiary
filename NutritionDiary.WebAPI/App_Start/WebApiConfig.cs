@@ -18,35 +18,14 @@ namespace NutritionDiary.WebAPI
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
-            config.Formatters.Remove(config.Formatters.XmlFormatter);
-            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            config.Formatters.JsonFormatter.SerializerSettings.Converters.Add(new LinkModelConverter());
-            CreateCustomMediaTypes(config.Formatters.JsonFormatter);
-
-            // Enable DI for filters / attributes
-            config.Services.Add(typeof(IFilterProvider), new UnityFilterProvider(UnityConfig.Container));
-
-            // Replace default controller selector
-            ////config.Services.Replace(typeof(IHttpControllerSelector), new NutritionDiaryControllerSelector(config));
-
-            // Configure Caching/ETag support
-            var connectionString = ConfigurationManager.ConnectionStrings[DEFAULT_CONNECTION_KEY].ConnectionString;
-            var etagStore = new SqlServerEntityTagStore(connectionString);
-            var cacheHandler = new CachingHandler(config, etagStore);
-            config.MessageHandlers.Add(cacheHandler);
-
-            // CORS support
-            var policyProvider = new EnableCorsAttribute("*", "*", "*");
-            config.EnableCors(policyProvider);
-
-#if !DEBUG
-            // Force HTTPS on entire Web API
-            config.Filters.Add(new RequireHttpsAttribute());
-#endif
-
             // Web API routes
             config.MapHttpAttributeRoutes();
+
+            config.Routes.MapHttpRoute(
+                name: FOODS_ROUTE,
+                routeTemplate: "api/nutrition/foods/{foodid}",
+                defaults: new { controller = "foods", foodid = RouteParameter.Optional }
+            );
 
             config.Routes.MapHttpRoute(
                 name: MEASURES_ROUTE,
@@ -77,6 +56,35 @@ namespace NutritionDiary.WebAPI
                 routeTemplate: "api/token",
                 defaults: new { controller = "token" }
             );
+
+            // Web API configuration and services
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
+            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            config.Formatters.JsonFormatter.SerializerSettings.Converters.Add(new LinkModelConverter());
+            CreateCustomMediaTypes(config.Formatters.JsonFormatter);
+
+            // Enable DI for filters / attributes
+            config.Services.Add(typeof(IFilterProvider), new UnityFilterProvider(UnityConfig.Container));
+
+            // Replace default controller selector
+            config.Services.Replace(typeof(IHttpControllerSelector), new NutritionDiaryControllerSelector(config));
+
+            // CORS support
+            var policyProvider = new EnableCorsAttribute("*", "*", "*");
+            config.EnableCors(policyProvider);
+
+#if !DEBUG
+            // Configure Caching/ETag support
+            var connectionString = ConfigurationManager.ConnectionStrings[DEFAULT_CONNECTION_KEY].ConnectionString;
+            var etagStore = new SqlServerEntityTagStore(connectionString);
+            var cacheHandler = new CachingHandler(config, etagStore);
+            config.MessageHandlers.Add(cacheHandler); 
+#endif
+
+#if !DEBUG
+            // Force HTTPS on entire Web API
+            config.Filters.Add(new RequireHttpsAttribute());
+#endif
         }
 
         private static void CreateCustomMediaTypes(JsonMediaTypeFormatter jsonFormatter)
