@@ -40,7 +40,7 @@ namespace NutritionDiary.WebAPI.Controllers
                     FoodCount = Repository.GetAllFoods().Count()
                 };
 
-                result = Ok(model);
+                result = Versioned(model, "v2");
             }
             else if (id == 2)
             {
