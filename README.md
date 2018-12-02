@@ -5,3 +5,4 @@ A simple REST-ful API for keeping track of daily nutrition.
 * Foods
 * Measures
 * User diaries
+* Diary entries
